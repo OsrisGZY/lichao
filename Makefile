@@ -39,14 +39,14 @@ ALT_DEVICE_FAMILY ?= soc_cv_av
 SOCEDS_ROOT ?= $(SOCEDS_DEST_ROOT)
 HWLIBS_ROOT = $(SOCEDS_ROOT)/ip/altera/hps/altera_hps/hwlib
 
-HWLIBS_SRC  := alt_16550_uart.c alt_clock_manager.c alt_interrupt.c alt_printf.c alt_cache.c alt_can.c 
-EXAMPLE_SRC := hwlib.c alt_16550_buffer.c alt_16550_prompt.c echo_prompt.c launcher_prompt.c memory_prompt.c fpga_uart.c fpga_timer.c socfpga_hps_init.c SST39VF160x.c
+HWLIBS_SRC  := alt_16550_uart.c alt_clock_manager.c alt_interrupt.c alt_printf.c
+EXAMPLE_SRC := hwlib.c alt_16550_buffer.c alt_16550_prompt.c echo_prompt.c launcher_prompt.c memory_prompt.c
 C_SRC       := $(EXAMPLE_SRC) $(HWLIBS_SRC)
 
 LINKER_SCRIPT := scatter.scat
 
 # Suppress ARMCC warning 9931: "Yours License for Compiler (feature compiler5) will expire in X days"
-CFLAGS   := -g -O0 --c99 --strict --diag_error=warning --diag_suppress=9931 --cpu=Cortex-A9 --no_unaligned_access -I$(HWLIBS_ROOT)/include -I$(HWLIBS_ROOT)/include/$(ALT_DEVICE_FAMILY) -D$(ALT_DEVICE_FAMILY)
+CFLAGS   := -g -O0 --strict --diag_error=warning --diag_suppress=9931 --cpu=Cortex-A9 --no_unaligned_access -I$(HWLIBS_ROOT)/include -I$(HWLIBS_ROOT)/include/$(ALT_DEVICE_FAMILY) -D$(ALT_DEVICE_FAMILY)
 ASMFLAGS := -g --diag_error=warning --diag_suppress=9931 --cpu=Cortex-A9 --no_unaligned_access
 LDFLAGS  := --strict --diag_error=warning --diag_suppress=9931 --entry=alt_interrupt_vector --cpu=Cortex-A9 --no_unaligned_access --scatter=$(LINKER_SCRIPT)
 
@@ -67,7 +67,7 @@ SPL := u-boot-spl.axf
 OBJ := $(patsubst %.c,%.o,$(C_SRC))
 
 .PHONY: all
-all: $(ELF) #$(SPL)
+all: $(ELF) $(SPL)
 
 .PHONY: clean
 clean:
@@ -96,6 +96,6 @@ $(ELF): $(OBJ) $(LINKER_SCRIPT) alt_interrupt_armcc.o
 	$(OD) -d $@ > $@.objdump
 	$(NM) $@ > $@.map
 
-$(SPL):E:/EDA_Intel/EDA_16_CV/DEMO_RTL/FPGA_RL/software/spl_bsp/uboot-socfpga/spl/u-boot-spl
+$(SPL): F:/1.M-PNT/M-PNT/fpga-rtl/software/spl_bsp/uboot-socfpga/spl/u-boot-spl
 	$(CP) $< $@
 	$(OD) -d $@ > $@.objdump
